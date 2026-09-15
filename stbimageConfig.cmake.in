@@ -1,0 +1,13 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Stb)
+
+include("${CMAKE_CURRENT_LIST_DIR}/stbimage-targets.cmake")
+
+# stb_image.h / stb_image_write.h themselves come from the separate Stb package (declarations
+# only; this package provides the one compiled implementation), so re-attach Stb's include dir
+# to the imported target here rather than baking an install-time path into the targets file.
+target_include_directories(stbimage::stbimage SYSTEM INTERFACE ${Stb_INCLUDE_DIR})
+
+check_required_components(stbimage)

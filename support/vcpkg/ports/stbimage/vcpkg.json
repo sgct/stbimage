@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "stbimage",
+  "version-date": "2026-09-15",
+  "description": [
+    "A single compiled instantiation of stb_image and stb_image_write, shared by Ghoul and SGCT so that linking both into the same program does not produce a duplicate-symbol/ODR conflict. See this repository's README for details.",
+    "This port lives inside the stbimage repository and builds the enclosing checkout (see portfile.cmake). Ghoul, SGCT, and the OpenSpace superproject each consume it as a git submodule at ext/stbimage, registering ext/stbimage/support/vcpkg/ports as an overlay-port path."
+  ],
+  "homepage": "https://github.com/sgct/stbimage",
+  "license": "MIT",
+  "dependencies": [
+    "stb",
+    { "name": "vcpkg-cmake", "host": true },
+    { "name": "vcpkg-cmake-config", "host": true }
+  ]
+}
