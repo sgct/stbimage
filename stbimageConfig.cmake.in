@@ -7,8 +7,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/stbimage-targets.cmake")
 
 # stb_image.h / stb_image_write.h themselves come from the separate Stb package (declarations
 # only), so re-attach Stb's include dir to the headers-only imported target here rather than
-# baking an install-time path into the targets file. unofficial::stbimage::stbimage links this
+# baking an install-time path into the targets file. unofficial::stbimage::impl links this
 # target PUBLIC, so it gets the include dir transitively.
-target_include_directories(unofficial::stbimage::headers SYSTEM INTERFACE ${Stb_INCLUDE_DIR})
+target_include_directories(unofficial::stbimage::stbimage SYSTEM INTERFACE ${Stb_INCLUDE_DIR})
 
 check_required_components(stbimage)

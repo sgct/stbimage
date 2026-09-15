@@ -6,17 +6,17 @@ include(CMakePackageConfigHelpers)
 
 find_package(Stb REQUIRED)
 
-add_library(stbimage-headers INTERFACE)
-add_library(unofficial::stbimage::headers ALIAS stbimage-headers)
-
-add_library(stbimage STATIC stb_impl.cpp)
+add_library(stbimage INTERFACE)
 add_library(unofficial::stbimage::stbimage ALIAS stbimage)
 
-target_include_directories(stbimage SYSTEM PRIVATE ${Stb_INCLUDE_DIR})
-target_link_libraries(stbimage PUBLIC stbimage-headers)
+add_library(stbimage-impl STATIC stb_impl.cpp)
+add_library(unofficial::stbimage::impl ALIAS stbimage-impl)
+
+target_include_directories(stbimage-impl SYSTEM PRIVATE ${Stb_INCLUDE_DIR})
+target_link_libraries(stbimage-impl PUBLIC stbimage)
 
 install(
-  TARGETS stbimage stbimage-headers
+  TARGETS stbimage-impl stbimage
   EXPORT stbimageTargets
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
