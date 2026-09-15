@@ -15,19 +15,11 @@ this CMake package is authored by this repository, not by the upstream stb proje
 
 ## Consuming stbimage
 A vcpkg port lives in `support/vcpkg/ports/stbimage` and builds the enclosing
-checkout. Ghoul and OpenSpace consume it as a git submodule at `ext/stbimage`,
-registering `ext/stbimage/support/vcpkg/ports` as an overlay-port path:
-
-```json
-{
-  "overlay-ports": [ "ext/stbimage/support/vcpkg/ports" ]
-}
-```
-
-SGCT instead fetches this repository directly from its own overlay port
-(`support/vcpkg/ports/stbimage` in the SGCT checkout), via `vcpkg_from_github`
-pinned to a commit here, so that SGCT keeps building from vcpkg alone with no
-submodule to initialize.
+checkout. Ghoul, SGCT, and the OpenSpace superproject each maintain their own
+overlay port (`support/vcpkg/ports/stbimage` in each of their own checkouts)
+that instead fetches this repository directly from GitHub via
+`vcpkg_from_github`, pinned to a commit here. None of them consume this
+repository as a git submodule.
 
 Either way, link against it the same way:
 
