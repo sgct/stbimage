@@ -2,9 +2,10 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "stbimage",
   "version-date": "2026-09-15",
-  "port-version": 1,
+  "port-version": 2,
   "description": [
     "A single compiled instantiation of stb_image and stb_image_write, shared by Ghoul and SGCT so that linking both into the same program does not produce a duplicate-symbol/ODR conflict. See this repository's README for details.",
+    "This package exports two CMake targets: unofficial::stbimage::headers (declarations only, for libraries that just call stbi_* functions) and unofficial::stbimage::stbimage (the compiled implementation, linked once by whichever executable actually produces the final link).",
     "This port lives inside the stbimage repository and builds the enclosing checkout (see portfile.cmake). Ghoul, SGCT, and the OpenSpace superproject each instead maintain their own overlay port that fetches this repository via vcpkg_from_github, pinned to a specific commit, rather than resolving a local checkout."
   ],
   "homepage": "https://github.com/sgct/stbimage",
