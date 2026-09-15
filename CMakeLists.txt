@@ -9,14 +9,16 @@ find_package(Stb REQUIRED)
 add_library(stbimage INTERFACE)
 add_library(unofficial::stbimage::stbimage ALIAS stbimage)
 
-add_library(stbimage-impl STATIC stb_impl.cpp)
-add_library(unofficial::stbimage::impl ALIAS stbimage-impl)
+add_library(stbimage-read-impl STATIC stb_impl_read.cpp)
+target_include_directories(stbimage-read-impl SYSTEM PRIVATE ${Stb_INCLUDE_DIR})
+target_link_libraries(stbimage-read-impl PUBLIC stbimage)
 
-target_include_directories(stbimage-impl SYSTEM PRIVATE ${Stb_INCLUDE_DIR})
-target_link_libraries(stbimage-impl PUBLIC stbimage)
+add_library(stbimage-write-impl STATIC stb_impl_write.cpp)
+target_include_directories(stbimage-write-impl SYSTEM PRIVATE ${Stb_INCLUDE_DIR})
+target_link_libraries(stbimage-write-impl PUBLIC stbimage)
 
 install(
-  TARGETS stbimage-impl stbimage
+  TARGETS stbimage-read-impl stbimage-write-impl stbimage
   EXPORT stbimageTargets
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

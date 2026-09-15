@@ -9,22 +9,32 @@ external linkage unless that translation unit also defines
 and [SGCT](https://github.com/sgct/sgct) need stb_image/stb_image_write, and
 both are linked into the same OpenSpace executable, so each independently
 compiling its own implementation is a duplicate-symbol/ODR hazard. This
-repository compiles the implementation exactly once instead.
+repository compiles each implementation exactly once instead, as two
+separate objects (read and write; see "CMake targets" below) so a consumer
+that already has a stb_image read implementation from elsewhere (e.g.
+assimp) can link only the write half.
 
 ## CMake targets
-This package exports two targets, both namespaced `unofficial::` because this
+This package exports three targets, all namespaced `unofficial::` because this
 CMake package is authored by this repository, not by the upstream stb project:
 
 - `unofficial::stbimage::stbimage` — an interface target with just the
   stb_image/stb_image_write declarations. Link this from any library that
   calls `stbi_*` functions but does not itself need to satisfy those symbols
   (e.g. Ghoul, SGCT); it never compiles anything.
-- `unofficial::stbimage::impl` — the compiled implementation. Link this
-  from whichever executable actually produces the final link (e.g. the
-  OpenSpace application, SGCT's `calibrator`), since that is the only place
-  the symbols need to be resolved. It publicly links
-  `unofficial::stbimage::stbimage`, so linking it also gives you the
-  declarations.
+- `unofficial::stbimage::stbimage-read-impl` — compiles just the stb_image
+  (read) functions, such as `stbi_load`. Link this from an executable that
+  needs those symbols resolved, unless something else already links a
+  different stb_image read implementation (e.g. assimp vendors its own copy,
+  and linking both would be a duplicate-symbol conflict).
+- `unofficial::stbimage::stbimage-write-impl` — compiles just the
+  stb_image_write (write) functions, such as `stbi_write_png`. Link this from
+  an executable that needs those symbols resolved.
+
+The read and write halves are split into separate targets/objects so that a
+program which already gets stb_image's read functions from elsewhere (like
+assimp) can link only the write half instead of pulling in a second,
+conflicting copy of the read functions.
 
 ## Consuming stbimage
 A vcpkg port lives in `support/vcpkg/ports/stbimage` and builds the enclosing
@@ -39,5 +49,6 @@ Either way:
 ```cmake
 find_package(stbimage CONFIG REQUIRED)
 target_link_libraries(mylib PRIVATE unofficial::stbimage::stbimage)
-target_link_libraries(myexe PRIVATE unofficial::stbimage::impl)
+target_link_libraries(myexe PRIVATE unofficial::stbimage::stbimage-read-impl)
+target_link_libraries(myexe PRIVATE unofficial::stbimage::stbimage-write-impl)
 ```
