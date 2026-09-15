@@ -7,7 +7,7 @@ include(CMakePackageConfigHelpers)
 find_package(Stb REQUIRED)
 
 add_library(stbimage STATIC stb_impl.cpp)
-add_library(stbimage::stbimage ALIAS stbimage)
+add_library(unofficial::stbimage::stbimage ALIAS stbimage)
 
 target_include_directories(stbimage SYSTEM PRIVATE ${Stb_INCLUDE_DIR})
 
@@ -22,7 +22,7 @@ install(
 install(
   EXPORT stbimageTargets
   FILE stbimage-targets.cmake
-  NAMESPACE stbimage::
+  NAMESPACE unofficial::stbimage::
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/stbimage
 )
 

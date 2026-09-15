@@ -9,14 +9,14 @@ external linkage unless that translation unit also defines
 and [SGCT](https://github.com/sgct/sgct) need stb_image/stb_image_write, and
 both are linked into the same OpenSpace executable, so each independently
 compiling its own implementation is a duplicate-symbol/ODR hazard. This
-repository compiles the implementation exactly once into a `stbimage::stbimage`
-CMake target that both depend on instead.
+repository compiles the implementation exactly once into an `unofficial::stbimage::stbimage`
+CMake target that both depend on instead. It is namespaced `unofficial::` because
+this CMake package is authored by this repository, not by the upstream stb project.
 
 ## Consuming stbimage
 A vcpkg port lives in `support/vcpkg/ports/stbimage` and builds the enclosing
-checkout. Ghoul, SGCT, and OpenSpace each consume it as a git submodule at
-`ext/stbimage`, registering `ext/stbimage/support/vcpkg/ports` as an
-overlay-port path:
+checkout. Ghoul and OpenSpace consume it as a git submodule at `ext/stbimage`,
+registering `ext/stbimage/support/vcpkg/ports` as an overlay-port path:
 
 ```json
 {
@@ -24,9 +24,14 @@ overlay-port path:
 }
 ```
 
-and then link against it:
+SGCT instead fetches this repository directly from its own overlay port
+(`support/vcpkg/ports/stbimage` in the SGCT checkout), via `vcpkg_from_github`
+pinned to a commit here, so that SGCT keeps building from vcpkg alone with no
+submodule to initialize.
+
+Either way, link against it the same way:
 
 ```cmake
 find_package(stbimage CONFIG REQUIRED)
-target_link_libraries(main PRIVATE stbimage::stbimage)
+target_link_libraries(main PRIVATE unofficial::stbimage::stbimage)
 ```

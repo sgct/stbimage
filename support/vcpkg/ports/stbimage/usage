@@ -1,4 +1,4 @@
 stbimage provides a CMake target:
 
     find_package(stbimage CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE stbimage::stbimage)
+    target_link_libraries(main PRIVATE unofficial::stbimage::stbimage)
